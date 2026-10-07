@@ -100,21 +100,21 @@ const { id, source, withCourse = false, note } = Astro.props;
 </form>
 
 <style>
-  .waitlist { display: grid; gap: 1.25rem; max-width: 36rem; }
+  .waitlist { display: grid; gap: 1.25rem; max-width: 36rem; text-align: left; }
   .row { display: grid; gap: 1.25rem; }
   @media (min-width: 40rem) {
     .row { grid-template-columns: 1fr 1.4fr; }
   }
   .field { display: grid; gap: .375rem; align-content: start; }
   label, legend {
-    font-size: .9375rem;
+    font-size: 1rem;
     font-weight: 500;
     color: var(--ink);
   }
   input[type='text'], input[type='email'] {
     width: 100%;
-    min-height: 2.75rem;
-    padding: .625rem .75rem;
+    min-height: 3.25rem;
+    padding: .75rem .875rem;
     font: inherit;
     color: var(--ink);
     background: var(--parchment);
@@ -149,7 +149,9 @@ const { id, source, withCourse = false, note } = Astro.props;
   }
   .field-error::before { content: 'Error: '; }
 
-  .actions { display: grid; gap: .75rem; justify-items: start; }
+  .actions { display: grid; gap: .875rem; justify-items: start; }
+  .actions .btn { width: 100%; }
+  @media (min-width: 40rem) { .actions .btn { width: auto; } }
   .note { max-width: 28rem; }
   .form-status:empty { display: none; }
   .form-status { margin: 0; font-weight: 500; color: var(--error); }

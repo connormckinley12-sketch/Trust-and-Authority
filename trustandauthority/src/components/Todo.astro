@@ -1,7 +1,7 @@
 ---
-// Visible marker for content Molly hasn't supplied yet.
+// Small marker for content Molly hasn't supplied or approved yet.
 // Production builds are blocked by scripts/check-content.mjs while any remain.
 interface Props { label: string }
 const { label } = Astro.props;
 ---
-<mark class="todo">[Molly to supply: {label}]</mark>
+<mark class="todo">Molly: {label}</mark>
