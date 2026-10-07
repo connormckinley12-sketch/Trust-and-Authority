@@ -1,0 +1,275 @@
+---
+import Base from '../layouts/Base.astro';
+import WaitlistForm from '../components/WaitlistForm.astro';
+import Todo from '../components/Todo.astro';
+import { site, courses, seo } from '../data/site.js';
+
+const launch = site.launchWindow;
+
+const faq = [
+  { q: 'When does the first course open?', a: launch ? `The first course opens ${launch}.` : null, todo: 'launch window' },
+  { q: 'Do I need a business idea to start?', a: 'No. Course 1 is for anyone who wants to trust their own judgment, idea or not.' },
+  { q: 'Is this a spiritual course?', a: 'It includes meditation and visualization alongside practical business tools. You don’t need any experience with either.' },
+  { q: 'What does it cost?', a: site.pricingAnswer, todo: 'pricing, or “Announced at launch.”' },
+  { q: 'Do I get a certificate?', a: 'Yes. Each course awards a certificate of completion.' },
+];
+
+// Structured data: Person, Organization, WebSite, and FAQPage.
+// FAQ entries without a final answer are left out of the markup.
+const molly = {
+  '@type': 'Person',
+  '@id': `${site.url}/#molly`,
+  name: 'Molly McKinley',
+  url: site.url,
+  description: 'Teacher of entrepreneurship and innovation, author of The Intentional Business, and founder of Redtail Creative.',
+  affiliation: { '@type': 'CollegeOrUniversity', name: 'Meredith College' },
+  knowsAbout: ['Entrepreneurship', 'Customer discovery', 'Design thinking', 'Marketing', 'Public relations'],
+  ...(site.sameAs.length ? { sameAs: site.sameAs } : {}),
+};
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    molly,
+    {
+      '@type': 'Organization',
+      '@id': `${site.url}/#org`,
+      name: site.name,
+      url: site.url,
+      logo: `${site.url}/favicon.svg`,
+      founder: { '@id': `${site.url}/#molly` },
+      description: seo.description,
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${site.url}/#website`,
+      url: site.url,
+      name: site.name,
+      publisher: { '@id': `${site.url}/#org` },
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: faq
+        .filter((f) => f.a)
+        .map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+    },
+  ],
+};
+---
+<Base title={seo.title} description={seo.description} schema={schema}>
+
+  <!-- 1. Opening -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <h1 id="hero-title">{site.headline ?? <Todo label="headline (A, B, C, or your own)" />}</h1>
+        <p class="lede">
+          On-demand courses that start where business plans don't: with your own judgment.
+          Quiet the noise, find the problem worth solving, and find out whether your idea is a real opportunity.
+        </p>
+        <WaitlistForm
+          id="hero"
+          source="hero"
+          note="Be first to know when the first course opens. No spam. Unsubscribe anytime."
+        />
+      </div>
+      <div class="hero-photo">
+        {site.photo ? (
+          <img
+            src={site.photo.src}
+            alt={site.photo.alt}
+            width={site.photo.width}
+            height={site.photo.height}
+            fetchpriority="high"
+          />
+        ) : (
+          <div class="photo-slot"><Todo label="hero photo of Molly" /></div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Who it's for -->
+  <section class="bg-vellum" aria-labelledby="for-title">
+    <div class="wrap prose">
+      <hr class="rule" />
+      <h2 id="for-title">For the person with a notebook full of ideas</h2>
+      <p>You've had the idea for months. Maybe years. You've read the articles, saved the podcasts, and asked three friends who all said &ldquo;go for it.&rdquo;</p>
+      <p>And still you don't know. Is this a business, or just a good idea? Are you ready, or just restless?</p>
+      <p>Those are fair questions. Most people answer them with other people's opinions. This course teaches you to answer them with evidence and with your own judgment, in that order.</p>
+    </div>
+  </section>
+
+  <!-- 3. What you'll learn -->
+  <section aria-labelledby="learn-title">
+    <div class="wrap">
+      <div class="prose">
+        <hr class="rule" />
+        <h2 id="learn-title">Four courses. One way of seeing.</h2>
+        <p>Each course stands on its own. Together they take you from a quiet hunch to a clear decision.</p>
+      </div>
+      <ol class="courses" role="list">
+        {courses.map((c) => (
+          <li>
+            <h3>{c.title}</h3>
+            <p>{c.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 4. How it's taught (the one dark band) -->
+  <section class="on-dark" aria-labelledby="taught-title">
+    <div class="wrap prose">
+      <h2 id="taught-title">Part workbook. Part practice.</h2>
+      <p>Every lesson pairs a short video with a worksheet and a guided meditation or visualization. The worksheets do the thinking. The practices make room for it.</p>
+      <p>You can find free business-planning courses anywhere. This one starts somewhere else: with whether you trust what you're seeing.</p>
+      <p>Finish a course and you earn a certificate of completion.</p>
+    </div>
+  </section>
+
+  <!-- 5. About Molly -->
+  <section class="bg-vellum" aria-labelledby="about-title">
+    <div class="wrap about-grid">
+      <div class="about-photo">
+        {site.photo ? (
+          <img src={site.photo.src} alt="" width={site.photo.width} height={site.photo.height} loading="lazy" />
+        ) : (
+          <div class="photo-slot small-slot"><Todo label="photo (same as hero is fine)" /></div>
+        )}
+      </div>
+      <div class="prose">
+        <hr class="rule" />
+        <h2 id="about-title">Your teacher</h2>
+        {site.aboutBio ? <p>{site.aboutBio}</p> : (
+          <p>
+            <Todo label="confirm title and Center name" /><br />
+            <span class="draft">{site.aboutBioDraft}</span>
+          </p>
+        )}
+        <blockquote class="pull">
+          {site.aboutQuote ? <p>{site.aboutQuote}</p> : (
+            <p><Todo label="your “why I teach this” lines" /><br /><span class="draft">{site.aboutQuoteDraft}</span></p>
+          )}
+        </blockquote>
+        {site.studentQuotePermission && (
+          <figure class="student">
+            <blockquote><p>&ldquo;{site.studentQuote}&rdquo;</p></blockquote>
+            <figcaption>A student</figcaption>
+          </figure>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Closing and second form -->
+  <section aria-labelledby="close-title" id="join">
+    <div class="wrap prose">
+      <hr class="rule" />
+      <h2 id="close-title">The first course opens {launch ?? <Todo label="season/month, year" />}</h2>
+      <p>Join the waitlist and tell us which course you'd take first. Your answer shapes what we film first.</p>
+      <div class="closing-form">
+        <WaitlistForm id="closing" source="closing" withCourse />
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-vellum faq" aria-labelledby="faq-title">
+    <div class="wrap prose">
+      <h2 id="faq-title">Frequently asked questions</h2>
+      <div class="qa-list">
+        {faq.map((f) => (
+          <div class="qa">
+            <h3>{f.q}</h3>
+            <p>{f.a ?? <Todo label={f.todo!} />}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Registers the "waitlist" form with Netlify at deploy time. Never shown. -->
+  <form name="waitlist" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input type="text" name="first_name" />
+    <input type="email" name="email" />
+    <input type="text" name="course" />
+    <input type="checkbox" name="consent" />
+    <input type="text" name="source" />
+    <input type="text" name="bot-field" />
+  </form>
+</Base>
+
+<style>
+  .hero { padding-block: clamp(2.5rem, 6vw, 5rem) var(--section); }
+  .hero-grid { display: grid; gap: 3rem; align-items: center; }
+  @media (min-width: 60rem) {
+    .hero-grid { grid-template-columns: 1.25fr 1fr; gap: 4rem; }
+  }
+  .hero h1 { max-width: 15ch; }
+  .lede { font-size: 1.125rem; max-width: 34rem; margin-bottom: 2.25rem; }
+  .hero-photo img { border-radius: 2px; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+
+  .photo-slot {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 5;
+    padding: 1.5rem;
+    background: var(--vellum);
+    border: 1px dashed var(--warm-umber);
+    text-align: center;
+  }
+  .bg-vellum .photo-slot { background: var(--parchment); }
+
+  .courses {
+    list-style: none;
+    margin: 3.5rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 2.5rem 3rem;
+    counter-reset: course;
+  }
+  @media (min-width: 48rem) { .courses { grid-template-columns: 1fr 1fr; } }
+  .courses li {
+    counter-increment: course;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--sand);   /* decorative divider */
+    max-width: 30rem;
+  }
+  .courses li::before {
+    content: counter(course, decimal-leading-zero);
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.75rem;                   /* large text; Brass Deep 5.07:1 */
+    color: var(--brass-deep);
+    margin-bottom: .25rem;
+  }
+
+  .about-grid { display: grid; gap: 3rem; align-items: start; }
+  @media (min-width: 52rem) { .about-grid { grid-template-columns: minmax(14rem, 22rem) 1fr; gap: 4rem; } }
+  .about-photo img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 2px; }
+  .small-slot { max-width: 22rem; }
+  .draft { color: var(--ink); }
+  .pull {
+    margin: 2rem 0 0;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--aged-gold);
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    line-height: 1.4;
+  }
+  .pull .draft { font-size: 1.5rem; }
+  .student {
+    margin: 2rem 0 0;
+    padding: 1.5rem 1.75rem;
+    background: var(--gilt);
+  }
+  .student blockquote { margin: 0; font-style: italic; }
+  .student figcaption { margin-top: .5rem; font-size: .875rem; }
+
+  .closing-form { margin-top: 2.5rem; }
+
+  .qa { padding-block: 1.5rem; border-top: 1px solid var(--sand); }
+  .qa:last-child { border-bottom: 1px solid var(--sand); }
+  .qa h3 { margin: 0 0 .5rem; }
+</style>

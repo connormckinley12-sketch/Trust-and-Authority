@@ -1,0 +1,96 @@
+---
+import '../styles/fonts.css';
+import '../styles/global.css';
+import { site } from '../data/site.js';
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+  noindex?: boolean;
+  schema?: object | null;
+}
+const { title, description, path = '/', noindex = false, schema = null } = Astro.props;
+const canonical = new URL(path, site.url).href;
+const ogImage = new URL('/og-image.png', site.url).href;
+const plausible = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN;
+---
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#F6F1E8" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <!-- Preload the three faces used above the fold so the fallback swap is brief -->
+    <link rel="preload" href="/fonts/cormorant-garamond-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/jost-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!-- Open Graph / social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Trust & Authority — courses that start with your own judgment" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+
+    {plausible && (
+      <>
+        <script defer data-domain={plausible} src="https://plausible.io/js/script.js"></script>
+        <script is:inline>window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments) };</script>
+      </>
+    )}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="wordmark" href="/">Trust <span aria-hidden="true">&amp;</span><span class="visually-hidden">and</span> Authority</a>
+      </div>
+    </header>
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <footer class="site-footer on-dark">
+      <div class="wrap footer-inner">
+        <p class="footer-mark">Trust &amp; Authority</p>
+        <p>A course by Molly McKinley. Made with <a href="https://redtailcreative.com">Redtail Creative</a>.</p>
+        <p class="footer-legal">&copy; {new Date().getFullYear()} Molly McKinley</p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .site-header { padding-block: 1.5rem; }
+  .wordmark {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: .01em;
+  }
+  .wordmark span[aria-hidden] { color: var(--brass-deep); }
+  main:focus { outline: none; } /* programmatic focus target only */
+
+  .site-footer { padding-block: 3.5rem; font-size: .9375rem; }
+  .footer-inner { display: grid; gap: .5rem; }
+  .footer-mark {
+    font-family: var(--font-display);
+    font-size: 1.75rem;       /* ≥24px: large text, so gold-adjacent use is safe */
+    margin-bottom: .5rem;
+  }
+  .footer-legal { opacity: 1; font-size: .875rem; }
+</style>

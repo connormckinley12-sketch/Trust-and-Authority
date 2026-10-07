@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base
+  title="You're on the list | Trust & Authority"
+  description="You're on the Trust & Authority waitlist."
+  path="/thanks/"
+  noindex
+>
+  <section class="thanks" aria-labelledby="thanks-title">
+    <div class="wrap prose">
+      <hr class="rule" />
+      <h1 id="thanks-title">You're on the list.</h1>
+      <p class="lede"><span id="thanks-greeting">Thank you.</span> Watch your inbox for a short note from me.</p>
+      <p>While you wait, try this: write down the one idea you keep coming back to, and the one thing you're afraid to find out about it.</p>
+      <p>Hold onto that page. You'll use it in the first lesson.</p>
+      <p class="sign">Molly</p>
+      <p class="back"><a href="/">Back to the home page</a></p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Personalise with the first name saved by the form (never put in the URL).
+  try {
+    const name = sessionStorage.getItem('ta-first-name');
+    if (name) {
+      document.getElementById('thanks-greeting')!.textContent = `Thank you, ${name}.`;
+      sessionStorage.removeItem('ta-first-name');
+    }
+  } catch { /* storage unavailable: generic greeting stays */ }
+</script>
+
+<style>
+  .thanks { min-height: 60vh; }
+  .lede { font-size: 1.125rem; }
+  .sign { font-family: var(--font-display); font-size: 1.75rem; margin-top: 2rem; }
+  .back { margin-top: 2.5rem; }
+</style>
