@@ -208,7 +208,8 @@ const schema = {
   }
   .hero h1 { max-width: 15ch; }
   .lede { font-size: 1.125rem; max-width: 34rem; margin-bottom: 2.25rem; }
-  .hero-photo img { border-radius: 2px; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+  .hero-photo { width: 100%; max-width: 26rem; justify-self: center; }
+  .hero-photo img { border-radius: 2px; width: 100%; height: auto; }
 
   .photo-slot {
     display: grid;
@@ -247,7 +248,7 @@ const schema = {
 
   .about-grid { display: grid; gap: 3rem; align-items: start; }
   @media (min-width: 52rem) { .about-grid { grid-template-columns: minmax(14rem, 22rem) 1fr; gap: 4rem; } }
-  .about-photo img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 2px; }
+  .about-photo img { width: 100%; height: auto; border-radius: 2px; }
   .small-slot { max-width: 22rem; }
   .draft { color: var(--ink); }
   .pull {
