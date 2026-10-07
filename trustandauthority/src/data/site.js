@@ -17,6 +17,8 @@ export const site = {
   //   B: "Before you build it, learn to hear it."
   //   C: "Hear the whisper through the noisy crowd."
   headline: null,
+  // Shown in previews until `headline` is set, so the page can be judged with a real headline.
+  headlineDraft: 'You have an idea. Do you trust it?',
 
   // e.g. "spring 2027". Used in the closing heading and the FAQ.
   launchWindow: null,
