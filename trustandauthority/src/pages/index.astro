@@ -59,13 +59,15 @@ const schema = {
 
   <!-- 1. Opening -->
   <section class="hero" aria-labelledby="hero-title">
-    <div class="wrap">
-      <div class="hero-copy">
-        <h1 id="hero-title">{site.headline ?? <Todo label="headline (A, B, C, or your own)" />}</h1>
-        <p class="lede">
-          On-demand courses that start where business plans don't: with your own judgment.
-          Quiet the noise, find the problem worth solving, and find out whether your idea is a real opportunity.
-        </p>
+    <div class="wrap hero-inner">
+      <hr class="rule rule-center" />
+      <h1 id="hero-title">{site.headline ?? site.headlineDraft}</h1>
+      {!site.headline && <span class="draft-tag"><Todo label="pick a headline (this is option A)" /></span>}
+      <p class="lede">
+        On-demand courses that start where business plans don't: with your own judgment.
+        Quiet the noise, find the problem worth solving, and find out whether your idea is a real opportunity.
+      </p>
+      <div class="hero-form">
         <WaitlistForm
           id="hero"
           source="hero"
@@ -88,9 +90,9 @@ const schema = {
 
   <!-- 3. What you'll learn -->
   <section aria-labelledby="learn-title">
-    <div class="wrap">
-      <div class="prose">
-        <hr class="rule" />
+    <div class="wrap wide">
+      <div class="section-head">
+        <hr class="rule rule-center" />
         <h2 id="learn-title">Four courses. One way of seeing.</h2>
         <p>Each course stands on its own. Together they take you from a quiet hunch to a clear decision.</p>
       </div>
@@ -117,7 +119,7 @@ const schema = {
 
   <!-- 5. About Molly -->
   <section class="bg-vellum" aria-labelledby="about-title">
-    <div class="wrap about-grid">
+    <div class="wrap wide about-grid">
       <div class="about-photo">
         {site.photo ? (
           <img src={site.photo.src} alt={site.photo.alt} width={site.photo.width} height={site.photo.height} loading="lazy" />
@@ -125,18 +127,18 @@ const schema = {
           <div class="photo-slot small-slot"><Todo label="photo (same as hero is fine)" /></div>
         )}
       </div>
-      <div class="prose">
+      <div class="about-copy">
         <hr class="rule" />
         <h2 id="about-title">Your teacher</h2>
         {site.aboutBio ? <p>{site.aboutBio}</p> : (
           <p>
-            <Todo label="confirm title and Center name" /><br />
-            <span class="draft">{site.aboutBioDraft}</span>
+            {site.aboutBioDraft}
+            <span class="draft-tag"><Todo label="confirm your title and the Center's name" /></span>
           </p>
         )}
         <blockquote class="pull">
           {site.aboutQuote ? <p>{site.aboutQuote}</p> : (
-            <p><Todo label="your “why I teach this” lines" /><br /><span class="draft">{site.aboutQuoteDraft}</span></p>
+            <p>{site.aboutQuoteDraft}<span class="draft-tag"><Todo label="your “why I teach this” lines" /></span></p>
           )}
         </blockquote>
         {site.studentQuotePermission && (
@@ -153,7 +155,7 @@ const schema = {
   <section aria-labelledby="close-title" id="join">
     <div class="wrap prose">
       <hr class="rule" />
-      <h2 id="close-title">The first course opens {launch ?? <Todo label="season/month, year" />}</h2>
+      <h2 id="close-title">The first course opens {launch ?? <Todo label="launch season, year" />}</h2>
       <p>Join the waitlist and tell us which course you'd take first. Your answer shapes what we film first.</p>
       <div class="closing-form">
         <WaitlistForm id="closing" source="closing" withCourse />
@@ -188,10 +190,26 @@ const schema = {
 </Base>
 
 <style>
-  .hero { padding-block: clamp(2.5rem, 6vw, 5rem) var(--section); }
-  .hero-copy { max-width: 44rem; }
-  .hero h1 { max-width: 18ch; }
-  .lede { font-size: 1.125rem; max-width: 34rem; margin-bottom: 2.25rem; }
+  .hero {
+    padding-block: clamp(3rem, 9vw, 7rem) var(--section);
+  }
+  .hero-inner {
+    max-width: 46rem;
+    text-align: center;
+  }
+  .rule-center { margin-inline: auto; }
+  .hero h1 { margin-inline: auto; max-width: 16ch; }
+  .lede {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    max-width: 36rem;
+    margin: 1.5rem auto 2.75rem;
+  }
+  .hero-form { display: flex; justify-content: center; }
+  .hero-form :global(.waitlist) { width: 100%; }
+  .hero-form :global(.actions) { justify-items: stretch; }
+  .hero-form :global(.actions .btn) { width: 100%; }
+  .hero-form :global(.note) { max-width: none; text-align: center; }
 
   .photo-slot {
     display: grid;
@@ -204,44 +222,47 @@ const schema = {
   }
   .bg-vellum .photo-slot { background: var(--parchment); }
 
+  .section-head { max-width: var(--measure); margin-inline: auto; text-align: center; }
+
   .courses {
     list-style: none;
     margin: 3.5rem 0 0;
     padding: 0;
     display: grid;
-    gap: 2.5rem 3rem;
+    gap: 1.25rem;
     counter-reset: course;
   }
   @media (min-width: 48rem) { .courses { grid-template-columns: 1fr 1fr; } }
   .courses li {
     counter-increment: course;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--sand);   /* decorative divider */
-    max-width: 30rem;
+    background: var(--vellum);
+    padding: 2rem 2rem 2.25rem;
+    border-top: 2px solid var(--aged-gold);   /* decorative */
   }
   .courses li::before {
     content: counter(course, decimal-leading-zero);
     display: block;
     font-family: var(--font-display);
-    font-size: 1.75rem;                   /* large text; Brass Deep 5.07:1 */
-    color: var(--brass-deep);
-    margin-bottom: .25rem;
+    font-size: 2.25rem;                       /* large text; Umber Deep 5.13:1 on Vellum */
+    line-height: 1;
+    color: var(--umber-deep);
+    margin-bottom: 1rem;
   }
+  .courses h3 { font-size: 1.625rem; }
 
-  .about-grid { display: grid; gap: 3rem; align-items: start; }
-  @media (min-width: 52rem) { .about-grid { grid-template-columns: minmax(14rem, 22rem) 1fr; gap: 4rem; } }
+  .about-grid { display: grid; gap: 3rem; align-items: center; }
+  @media (min-width: 52rem) { .about-grid { grid-template-columns: minmax(16rem, 24rem) 1fr; gap: 4.5rem; } }
   .about-photo img { width: 100%; height: auto; border-radius: 2px; }
-  .small-slot { max-width: 22rem; }
-  .draft { color: var(--ink); }
+  .small-slot { max-width: 24rem; }
+  .about-copy { max-width: var(--measure); }
   .pull {
-    margin: 2rem 0 0;
-    padding-left: 1.5rem;
+    margin: 2.25rem 0 0;
+    padding-left: 1.75rem;
     border-left: 2px solid var(--aged-gold);
     font-family: var(--font-display);
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     line-height: 1.4;
   }
-  .pull .draft { font-size: 1.5rem; }
   .student {
     margin: 2rem 0 0;
     padding: 1.5rem 1.75rem;
@@ -252,7 +273,7 @@ const schema = {
 
   .closing-form { margin-top: 2.5rem; }
 
-  .qa { padding-block: 1.5rem; border-top: 1px solid var(--sand); }
+  .qa { padding-block: 1.75rem; border-top: 1px solid var(--sand); }
   .qa:last-child { border-bottom: 1px solid var(--sand); }
   .qa h3 { margin: 0 0 .5rem; }
 </style>
