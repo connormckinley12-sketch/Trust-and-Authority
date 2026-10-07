@@ -26,7 +26,14 @@ export const site = {
 
   // Hero / About photo. Drop the file in /public/images/ and set:
   //   { src: '/images/molly.jpg', alt: 'Molly McKinley …', width: 1200, height: 1500 }
-  photo: null,
+  // Currently loads from Molly's Squarespace site. Before launch, save the file
+  // to /public/images/molly.jpg and change src to '/images/molly.jpg'.
+  photo: {
+    src: 'https://images.squarespace-cdn.com/content/v1/6282a8b7c39f863cd10f8ece/bcdc28c9-9630-40f3-a04d-3595eaaff4b4/molly.jpg?format=1500w',
+    alt: 'Molly McKinley smiling, holding a copy of her book, The Intentional Business',
+    width: 1245,
+    height: 1865,
+  },
 
   // Confirm exact title and the Center's official name.
   aboutBio: null,
