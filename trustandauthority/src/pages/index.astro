@@ -59,7 +59,7 @@ const schema = {
 
   <!-- 1. Opening -->
   <section class="hero" aria-labelledby="hero-title">
-    <div class="wrap hero-grid">
+    <div class="wrap">
       <div class="hero-copy">
         <h1 id="hero-title">{site.headline ?? <Todo label="headline (A, B, C, or your own)" />}</h1>
         <p class="lede">
@@ -71,19 +71,6 @@ const schema = {
           source="hero"
           note="Be first to know when the first course opens. No spam. Unsubscribe anytime."
         />
-      </div>
-      <div class="hero-photo">
-        {site.photo ? (
-          <img
-            src={site.photo.src}
-            alt={site.photo.alt}
-            width={site.photo.width}
-            height={site.photo.height}
-            fetchpriority="high"
-          />
-        ) : (
-          <div class="photo-slot"><Todo label="hero photo of Molly" /></div>
-        )}
       </div>
     </div>
   </section>
@@ -133,7 +120,7 @@ const schema = {
     <div class="wrap about-grid">
       <div class="about-photo">
         {site.photo ? (
-          <img src={site.photo.src} alt="" width={site.photo.width} height={site.photo.height} loading="lazy" />
+          <img src={site.photo.src} alt={site.photo.alt} width={site.photo.width} height={site.photo.height} loading="lazy" />
         ) : (
           <div class="photo-slot small-slot"><Todo label="photo (same as hero is fine)" /></div>
         )}
@@ -202,14 +189,9 @@ const schema = {
 
 <style>
   .hero { padding-block: clamp(2.5rem, 6vw, 5rem) var(--section); }
-  .hero-grid { display: grid; gap: 3rem; align-items: center; }
-  @media (min-width: 60rem) {
-    .hero-grid { grid-template-columns: 1.25fr 1fr; gap: 4rem; }
-  }
-  .hero h1 { max-width: 15ch; }
+  .hero-copy { max-width: 44rem; }
+  .hero h1 { max-width: 18ch; }
   .lede { font-size: 1.125rem; max-width: 34rem; margin-bottom: 2.25rem; }
-  .hero-photo { width: 100%; max-width: 26rem; justify-self: center; }
-  .hero-photo img { border-radius: 2px; width: 100%; height: auto; }
 
   .photo-slot {
     display: grid;
